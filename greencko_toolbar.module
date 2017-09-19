@@ -1,0 +1,141 @@
+<?php
+/**
+ * @file
+ * Functions to support greencko toolbar.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_install().
+ */
+function greencko_toolbar_install() {
+  drupal_flush_all_caches();
+}
+
+/**
+ * Implements hook_help().
+ */
+function greencko_toolbar_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.greencko_toolbar':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('greencko Toolbar makes your Drupal expierence as simple as possible');
+      $output .= '<h3>' . t('Usage') . '</h3>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('Custom Settings are available under (Configuration > greencko Drupal > Toolbar Settings)') . '</li>';
+      $output .= '</ul>';
+      return $output;
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function greencko_toolbar_preprocess_html(&$variables) {
+  if (_greencko_toolbar_is_access()) {
+    $config = \Drupal::config('greencko_toolbar.settings');
+    $hide_labels = $config->get('appearance.labels');
+
+    if ($hide_labels) {
+      $variables['attributes']['class'][] = 'hidelabels';
+    }
+
+    $variables['attributes']['class'][] = 'greencko-toolbar';
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function greencko_toolbar_page_attachments_alter(array &$page) {
+  // Attaches css assets globally.
+  if (_greencko_toolbar_is_access()) {
+    $page['#attached']['library'][] = 'greencko_toolbar/greencko_toolbar';
+  }
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function greencko_toolbar_toolbar() {
+  if (_greencko_toolbar_is_access()) {
+    $config = \Drupal::config('greencko_toolbar.settings');
+
+    $items = [];
+    $items['front'] = [
+      '#type' => 'toolbar_item',
+      'tab' => [
+        '#type' => 'link',
+        '#title' => t('Home'),
+        '#url' => Url::fromRoute('<front>'),
+        '#options' => [
+          'attributes' => [
+            'title' => t('Home page'),
+            'class' => ['toolbar-item', 'toolbar-icon', 'toolbar-icon-home'],
+          ],
+        ],
+      ],
+      '#weight' => -20,
+    ];
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function greencko_toolbar_toolbar_alter(&$items) {
+  if (_greencko_toolbar_is_access()) {
+    // Get Toolbar Configuration
+    $config = \Drupal::config('greencko_toolbar.settings');
+
+    $rightOriented = [
+      'user',
+      'contextual',
+    ];
+
+    foreach ($items as $key => &$item) {
+      if (in_array($key, $rightOriented)) {
+        $item['#wrapper_attributes']['class'][] = 'toolbar-tab-right';
+      }
+      elseif (isset($item['tray'])) {
+        $item['#wrapper_attributes']['class'][] = 'toolbar-tab-left';
+      }
+      else {
+        $item['#wrapper_attributes']['class'][] = 'toolbar-tab-left';
+      }
+    }
+
+    // Make Logo the main administration menu
+    $items['administration']['tab']['#title'] = t('Administration');
+    $items['administration']['#weight'] = -98;
+    $items['administration']['tab']['#attributes']['class'][] = 'toolbar-icon-admin';
+
+    //Alter tab positions
+    if (isset($items['home'])) {
+      $items['home']['#weight'] = -90;
+    }
+    if (isset($items['shortcuts'])) {
+      $items['shortcuts']['#weight'] = 100;
+    }
+    if (isset($items['user'])) {
+      $items['user']['#weight'] = -10;
+    }
+    if (isset($items['contextual'])) {
+      $items['contextual']['#weight'] = 100;
+    }
+
+  }
+}
+
+/**
+ * Helper function for checking user permission.
+ */
+function _greencko_toolbar_is_access() {
+  $user = \Drupal::currentUser();
+  return $user->hasPermission('access toolbar');
+}

@@ -1,0 +1,6 @@
+greencko_toolbar.settings:
+  title: 'Toolbar settings'
+  parent: greencko_core.admin_config_greencko
+  description: 'Change Toolbar settings'
+  route_name: greencko_toolbar.settings
+  weight: 0

@@ -1,0 +1,12 @@
+appearance:
+  labels: FALSE
+menu:
+  greencko: TRUE
+  drupal: TRUE
+  add: TRUE
+  edit: TRUE
+  translate: TRUE
+  content: TRUE
+  menu: TRUE
+  taxonomy: TRUE
+  reports: TRUE

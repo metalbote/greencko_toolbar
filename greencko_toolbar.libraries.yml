@@ -1,0 +1,7 @@
+greencko_toolbar:
+  version: VERSION
+  css:
+    theme:
+      css/greencko_toolbar.css: {}
+  dependencies:
+    - toolbar/toolbar

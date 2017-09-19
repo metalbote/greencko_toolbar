@@ -1,0 +1,45 @@
+greencko_toolbar.settings:
+  type: config_object
+  label: 'greencko Toolbar Settings'
+  mapping:
+    appearance:
+      type: mapping
+      label: 'Appearance Settings'
+      mapping:
+        labels:
+          type: boolean
+          label: 'Hide Labels'
+    menu:
+      type: mapping
+      label: 'Button Settings'
+      mapping:
+        greencko:
+          type: boolean
+          label: 'Show greencko'
+        drupal:
+          type: boolean
+          label: 'Show Drupal'
+        add:
+          type: boolean
+          label: 'Show add content'
+        edit:
+          type: boolean
+          label: 'Show edit content'
+        translate:
+          type: boolean
+          label: 'Show translate content'
+        content:
+          type: boolean
+          label: 'Show content overview'
+        menu:
+          type: boolean
+          label: 'Show menu'
+        taxonomy:
+          type: boolean
+          label: 'Show taxonomy'
+        reports:
+          type: boolean
+          label: 'Show reports'
+
+
+

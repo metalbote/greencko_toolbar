@@ -1,0 +1,7 @@
+greencko_toolbar.settings:
+  path: '/admin/config/greencko/toolbar'
+  defaults:
+    _form: 'Drupal\greencko_toolbar\Form\GreenckoToolbarSettingsForm'
+    _title: 'Toolbar Settings'
+  requirements:
+    _permission: 'administer site configuration'
